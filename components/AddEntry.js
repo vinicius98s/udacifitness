@@ -1,19 +1,19 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Text, Platform } from "react-native";
+import { Text, Platform } from "react-native";
 import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { addEntry } from "../actions";
+import { NavigationActions } from "react-navigation";
 
+import { addEntry } from "../actions";
 import { getMetricMetaInfo, timeToString, getDailyReminderValue } from "../utils/helpers";
+import { submitEntry, removeEntry } from "../utils/API";
+import { purple } from "../utils/colors";
 
 import UdaciSlider from "./UdaciSlider";
 import UdaciSteppers from "./UdaciSteppers";
 import DateHeader from "./DateHeader";
 import TextButton from "./TextButton";
-
-import { submitEntry, removeEntry } from "../utils/API";
-import { purple } from "../utils/colors";
 
 function SubmitBtn({ onPress }) {
     return (
@@ -70,7 +70,7 @@ class AddEntry extends Component {
 
         this.setState(() => ({ run: 0, bike: 0, swim: 0, sleep: 0, eat: 0 }));
 
-        // Navigate to home
+        this.toHome();
 
         submitEntry({ key, entry });
 
@@ -85,10 +85,19 @@ class AddEntry extends Component {
             })
         );
 
-        // Route to Home
+        this.toHome();
 
         removeEntry(key);
     };
+
+    toHome = () => {
+        this.props.navigation.dispatch(
+            NavigationActions.back({
+                key: "AddEntry"
+            })
+        );
+    };
+
     render() {
         const metaInfo = getMetricMetaInfo();
 
